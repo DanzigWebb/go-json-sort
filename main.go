@@ -10,28 +10,25 @@ import (
 )
 
 var (
-	configPath string
+	pathToFolder string
 )
 
 func init() {
-	flag.StringVar(&configPath, "path", "i18n", "path to folder")
+	flag.StringVar(&pathToFolder, "path", "i18n", "path to folder")
 }
 
 func main() {
 	flag.Parse()
 
-	var (
-		folder = configPath
-		langs  = findJSONInFolder(folder)
-	)
+	langs := findJSONInFolder(pathToFolder)
 
 	if len(langs) == 0 {
 		fmt.Printf("Файлы с расширением .json не найдены \n")
 		return
 	}
 
-	for _, langFile := range langs {
-		path := filepath.Join(folder, langFile)
+	for _, file := range langs {
+		path := filepath.Join(pathToFolder, file)
 		initialFile := readJSONFile(path)
 		outputFile := outputJSON(initialFile)
 		ioutil.WriteFile(path, outputFile, 0)
