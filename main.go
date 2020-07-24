@@ -34,10 +34,10 @@ func main() {
 }
 
 func findJSONInFolder(pathToFolder string) []string {
-	fileInfo, _ := ioutil.ReadDir(pathToFolder)
+	folderFiles, _ := ioutil.ReadDir(pathToFolder)
 
 	var JSONFiles []string
-	for _, file := range fileInfo {
+	for _, file := range folderFiles {
 		if filepath.Ext(file.Name()) == ".json" {
 			JSONFiles = append(JSONFiles, file.Name())
 		}
