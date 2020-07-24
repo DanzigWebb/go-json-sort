@@ -20,8 +20,15 @@ func init() {
 func main() {
 	flag.Parse()
 
-	folder := configPath
-	langs := findJSONInFolder(folder)
+	var (
+		folder = configPath
+		langs  = findJSONInFolder(folder)
+	)
+
+	if len(langs) == 0 {
+		fmt.Printf("Файлы с расширением .json не найдены \n")
+		return
+	}
 
 	for _, langFile := range langs {
 		path := filepath.Join(folder, langFile)
@@ -30,7 +37,7 @@ func main() {
 		ioutil.WriteFile(path, outputFile, 0)
 	}
 
-	fmt.Printf("%d файла/ов отсортировано", len(langs))
+	fmt.Printf("%d файла/ов отсортировано \n", len(langs))
 }
 
 func findJSONInFolder(pathToFolder string) []string {
