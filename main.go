@@ -3,25 +3,28 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"sorting/compare"
+	"sorting/flags"
 	"sorting/folder"
-	"sorting/folderpath"
 )
 
 func main() {
-	folderpath.Init()
+	flags.Init()
 
-	langs := folder.FindJSONInFolder()
+	JSONFilesName := folder.FindJSONInFolder()
 
-	if len(langs) == 0 {
-		fmt.Printf("Файлы с расширением .json не найдены \n")
+	if len(JSONFilesName) == 0 {
+		fmt.Printf("Файлы json не найдены \n")
 		return
 	}
 
-	sortingJSON, fileNames := folder.GetJSONAndPathes(langs)
+	sortingJSONSlice, filePathes := folder.GetJSONAndPathes(JSONFilesName)
 
-	for i, file := range sortingJSON {
-		ioutil.WriteFile(fileNames[i], file, 0777)
+	compare.Start(sortingJSONSlice)
+
+	for i, file := range sortingJSONSlice {
+		ioutil.WriteFile(filePathes[i], file, 0777)
 	}
 
-	fmt.Printf("%d файла/ов отсортировано \n", len(langs))
+	fmt.Printf("\n%d файла/ов отсортировано \n\n", len(JSONFilesName))
 }

@@ -5,28 +5,28 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"sorting/folderpath"
+	"sorting/flags"
 )
 
 // GetJSONAndPathes returns output JSON files and pathes to original files in slices
-func GetJSONAndPathes(langs []string) ([][]byte, []string) {
+func GetJSONAndPathes(JSONFilesName []string) ([][]byte, []string) {
 	var sortingJSON [][]byte
-	var fileNames []string
+	var filePathes []string
 
-	for _, file := range langs {
-		path := filepath.Join(folderpath.Path, file)
-		fileNames = append(fileNames, path)
-		initialFile := readJSONFile(path)
-		outputFile := outputJSON(initialFile)
+	for _, file := range JSONFilesName {
+		path := filepath.Join(flags.Path, file)
+		filePathes = append(filePathes, path)
+		initialFile := ReadJSONFile(path)
+		outputFile := OutputJSON(initialFile)
 		sortingJSON = append(sortingJSON, outputFile)
 	}
 
-	return sortingJSON, fileNames
+	return sortingJSON, filePathes
 }
 
 // FindJSONInFolder return JSON files in current folder
 func FindJSONInFolder() []string {
-	folderFiles, _ := ioutil.ReadDir(folderpath.Path)
+	folderFiles, _ := ioutil.ReadDir(flags.Path)
 
 	var JSONFiles []string
 	for _, file := range folderFiles {
@@ -38,8 +38,8 @@ func FindJSONInFolder() []string {
 	return JSONFiles
 }
 
-
-func readJSONFile(path string) []byte {
+// ReadJSONFile return byte file of json
+func ReadJSONFile(path string) []byte {
 	file, err := ioutil.ReadFile(path)
 
 	if err != nil {
@@ -49,7 +49,8 @@ func readJSONFile(path string) []byte {
 	return file
 }
 
-func outputJSON(file []byte) []byte {
+// OutputJSON returns sort JSON file
+func OutputJSON(file []byte) []byte {
 	var result map[string]interface{}
 
 	if err := json.Unmarshal(file, &result); err != nil {

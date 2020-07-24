@@ -1,4 +1,4 @@
-package folderpath
+package flags
 
 import "flag"
 
