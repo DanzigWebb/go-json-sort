@@ -1,5 +1,5 @@
 .PHONY: start
 start:
-			./sorting -path=path/to/folder
+			./sorting -path=i18n
 
 .DEFAULT_GOAL := start
