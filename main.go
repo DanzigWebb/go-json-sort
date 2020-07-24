@@ -31,7 +31,7 @@ func main() {
 		path := filepath.Join(pathToFolder, file)
 		initialFile := readJSONFile(path)
 		outputFile := outputJSON(initialFile)
-		ioutil.WriteFile(path, outputFile, 0)
+		ioutil.WriteFile(path, outputFile, 0777)
 	}
 
 	fmt.Printf("%d файла/ов отсортировано \n", len(langs))
