@@ -8,24 +8,24 @@ import (
 	"sorting/flags"
 )
 
-// GetJSONAndPathes returns output JSON files and pathes to original files in slices
-func GetJSONAndPathes(JSONFilesName []string) ([][]byte, []string) {
+// GetJSONAndPath returns output JSON files and pathes to original files in slices
+func GetJSONAndPath(JSONFilesName []string) ([][]byte, []string) {
 	var sortingJSON [][]byte
-	var filePathes []string
+	var filePathSlice []string
 
 	for _, file := range JSONFilesName {
 		path := filepath.Join(flags.Path, file)
-		filePathes = append(filePathes, path)
+		filePathSlice = append(filePathSlice, path)
 		initialFile := ReadJSONFile(path)
 		outputFile := OutputJSON(initialFile)
 		sortingJSON = append(sortingJSON, outputFile)
 	}
 
-	return sortingJSON, filePathes
+	return sortingJSON, filePathSlice
 }
 
-// FindJSONInFolder return JSON files in current folder
-func FindJSONInFolder() []string {
+// FindJSONFiles return JSON files in current folder
+func FindJSONFiles() []string {
 	folderFiles, _ := ioutil.ReadDir(flags.Path)
 
 	var JSONFiles []string

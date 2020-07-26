@@ -9,16 +9,16 @@ import (
 )
 
 func main() {
-	flags.Init()
+	flags.Parse()
 
-	JSONFilesName := folder.FindJSONInFolder()
+	JSONNames := folder.FindJSONFiles()
 
-	if len(JSONFilesName) == 0 {
+	if len(JSONNames) == 0 {
 		fmt.Printf("Файлы json не найдены \n")
 		return
 	}
 
-	sortingJSONSlice, filePathes := folder.GetJSONAndPathes(JSONFilesName)
+	sortingJSONSlice, filePathes := folder.GetJSONAndPath(JSONNames)
 
 	compare.Start(sortingJSONSlice)
 
@@ -26,5 +26,5 @@ func main() {
 		ioutil.WriteFile(filePathes[i], file, 0777)
 	}
 
-	fmt.Printf("\n%d файла/ов отсортировано \n\n", len(JSONFilesName))
+	fmt.Printf("\n%d файла/ов отсортировано \n\n", len(JSONNames))
 }

@@ -7,8 +7,8 @@ var (
 	Path string
 )
 
-// Init call flag parser
-func Init() {
+// Parse call flag parser
+func Parse() {
 	flag.StringVar(&Path, "path", "i18n", "path to folder")
 	flag.Parse()
 }
