@@ -24,7 +24,7 @@ func main() {
 
 	for _, file := range outputFiles {
 		if err := ioutil.WriteFile(file.Path, file.Content, 0777); err != nil {
-			fmt.Println("An error occurred:", err)
+			fmt.Println("Ошибка записи файла:", err)
 			return
 		}
 	}
