@@ -14,16 +14,19 @@ func main() {
 	JSONNames := folder.FindJSONFiles()
 
 	if len(JSONNames) == 0 {
-		fmt.Printf("Файлы json не найдены \n")
+		fmt.Println("Файлы json не найдены")
 		return
 	}
 
-	sortingJSONSlice, filePathes := folder.GetJSONAndPath(JSONNames)
+	sortingJSONSlice, filePathSlice := folder.GetJSONAndPath(JSONNames)
 
 	compare.Start(sortingJSONSlice)
 
 	for i, file := range sortingJSONSlice {
-		ioutil.WriteFile(filePathes[i], file, 0777)
+		if err := ioutil.WriteFile(filePathSlice[i], file, 0777); err != nil {
+			fmt.Println("An error occurred:", err)
+			return
+		}
 	}
 
 	fmt.Printf("\n%d файла/ов отсортировано \n\n", len(JSONNames))
