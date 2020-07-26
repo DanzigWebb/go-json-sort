@@ -4,8 +4,20 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"path"
 	"sorting/folder"
+	"strings"
 )
+
+type parsedJSON struct {
+	fileName string
+	parsed   map[string]map[string]interface{}
+}
+
+type differenceInfo struct {
+	fileName string
+	length   int
+}
 
 // Start ...
 func Start(JSONAndPath []folder.JSONAndPath) {
@@ -14,11 +26,16 @@ func Start(JSONAndPath []folder.JSONAndPath) {
 
 	count := 0
 
-	for key, element := range sliceOfJSON[0] {
-		prev, next := len(element), len(sliceOfJSON[1][key])
-		if prev != next {
+	JSONItemPrev := sliceOfJSON[0]
+	JSONItemNext := sliceOfJSON[1]
+
+	for key, _ := range JSONItemPrev.parsed {
+		var prev = differenceInfo{JSONItemPrev.fileName, len(JSONItemPrev.parsed[key])}
+		var next = differenceInfo{JSONItemNext.fileName, len(JSONItemNext.parsed[key])}
+
+		if prev.length != next.length {
 			count++
-			fmt.Printf("\n - Ключи \"%s\" отличаются %s\n", key, showDifference(prev, next))
+			fmt.Printf("\n - Ключи \"%s\" отличаются: \n %s\n", key, showDifference(prev, next))
 		}
 	}
 
@@ -29,20 +46,30 @@ func Start(JSONAndPath []folder.JSONAndPath) {
 	}
 }
 
-func getParsedJSON(sortingJSONFiles []folder.JSONAndPath) []map[string]map[string]interface{} {
-	var resultSlice []map[string]map[string]interface{}
+func getParsedJSON(sortingJSONFiles []folder.JSONAndPath) []parsedJSON {
 
-	for i := 0; i < len(sortingJSONFiles); i++ {
-		var result map[string]map[string]interface{}
-		if err := json.Unmarshal(sortingJSONFiles[i].Content, &result); err != nil {
+	var result []parsedJSON
+
+	for _, item := range sortingJSONFiles {
+		var output map[string]map[string]interface{}
+		if err := json.Unmarshal(item.Content, &output); err != nil {
 			log.Fatal(err)
 		}
-		resultSlice = append(resultSlice, result)
+		var name = path.Base(item.Path)
+		result = append(result, parsedJSON{name, output})
 	}
 
-	return resultSlice
+	return result
 }
 
-func showDifference(prev, next int) string {
-	return fmt.Sprintf("(%d / %d)", prev, next)
+func showDifference(info ...differenceInfo) string {
+
+	var result []string
+
+	for i := 0; i < len(info); i++ {
+		name, length := info[i].fileName, info[i].length
+		result = append(result, fmt.Sprintf("(%s: %d)", name, length))
+	}
+
+	return strings.Join(result, " / ")
 }
