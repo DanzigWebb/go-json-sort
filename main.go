@@ -18,12 +18,12 @@ func main() {
 		return
 	}
 
-	sortingJSONSlice, filePathSlice := folder.GetJSONAndPath(JSONNames)
+	outputFiles := folder.GetJSONAndPath(JSONNames)
 
-	compare.Start(sortingJSONSlice)
+	compare.Start(outputFiles)
 
-	for i, file := range sortingJSONSlice {
-		if err := ioutil.WriteFile(filePathSlice[i], file, 0777); err != nil {
+	for _, file := range outputFiles {
+		if err := ioutil.WriteFile(file.Path, file.Content, 0777); err != nil {
 			fmt.Println("An error occurred:", err)
 			return
 		}

@@ -8,20 +8,22 @@ import (
 	"sorting/flags"
 )
 
+type JSONAndPath struct {
+	Path    string
+	Content []byte
+}
+
 // GetJSONAndPath returns output JSON files and pathes to original files in slices
-func GetJSONAndPath(JSONFilesName []string) ([][]byte, []string) {
-	var sortingJSON [][]byte
-	var filePathSlice []string
+func GetJSONAndPath(JSONFilesName []string) []JSONAndPath {
+	var output []JSONAndPath
 
 	for _, file := range JSONFilesName {
 		path := filepath.Join(flags.Path, file)
-		filePathSlice = append(filePathSlice, path)
-		initialFile := ReadJSONFile(path)
-		outputFile := OutputJSON(initialFile)
-		sortingJSON = append(sortingJSON, outputFile)
+		outputFile := OutputJSON(path)
+		output = append(output, JSONAndPath{path, outputFile})
 	}
 
-	return sortingJSON, filePathSlice
+	return output
 }
 
 // FindJSONFiles return JSON files in current folder
@@ -38,19 +40,9 @@ func FindJSONFiles() []string {
 	return JSONFiles
 }
 
-// ReadJSONFile return byte file of json
-func ReadJSONFile(path string) []byte {
-	file, err := ioutil.ReadFile(path)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return file
-}
-
 // OutputJSON returns sort JSON file
-func OutputJSON(file []byte) []byte {
+func OutputJSON(path string) []byte {
+	var file = readJSONFile(path)
 	var result map[string]interface{}
 
 	if err := json.Unmarshal(file, &result); err != nil {
@@ -64,4 +56,14 @@ func OutputJSON(file []byte) []byte {
 	}
 
 	return sortJSON
+}
+
+func readJSONFile(path string) []byte {
+	file, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return file
 }

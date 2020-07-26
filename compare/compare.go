@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"sorting/folder"
 )
 
 // Start ...
-func Start(sortingJSONFiles [][]byte) {
+func Start(JSONAndPath []folder.JSONAndPath) {
 
-	var sliceOfJSON = getParsedJSON(sortingJSONFiles)
+	var sliceOfJSON = getParsedJSON(JSONAndPath)
 
 	count := 0
 
@@ -28,12 +29,12 @@ func Start(sortingJSONFiles [][]byte) {
 	}
 }
 
-func getParsedJSON(sortingJSONFiles [][]byte) []map[string]map[string]interface{} {
+func getParsedJSON(sortingJSONFiles []folder.JSONAndPath) []map[string]map[string]interface{} {
 	var resultSlice []map[string]map[string]interface{}
 
 	for i := 0; i < len(sortingJSONFiles); i++ {
 		var result map[string]map[string]interface{}
-		if err := json.Unmarshal(sortingJSONFiles[i], &result); err != nil {
+		if err := json.Unmarshal(sortingJSONFiles[i].Content, &result); err != nil {
 			log.Fatal(err)
 		}
 		resultSlice = append(resultSlice, result)
